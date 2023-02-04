@@ -1,4 +1,20 @@
-h1 {
-    color: #27aedb;
-    text-align: center;
+body {
+	background-image: radial-gradient(#c44, #111);
+	margin: 0;
+	padding: 0;
+}
+
+.fieldbg {
+	background: #333;
+	box-shadow: 0px 16px 30px 0px #200;
+	width: fit-content;
+    min-width: 620px;
+	margin: 0 auto;
+    padding: 10px;
+	border-radius: 15px;
+}
+
+.field {    
+    width: fit-content;
+	margin: 0 auto;
 }
