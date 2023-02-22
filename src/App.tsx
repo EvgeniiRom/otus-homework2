@@ -1,63 +1,118 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import GameField from "./components/GameField";
 import { equalMatrix, Field, generateField, generateNextGeneration } from "./common/Tools";
 import "./styles/App.css";
 import TopMenu, { ModeButtonType } from "./components/TopMenu";
 import BottomMenu, { SizeButtonType, SpeedButtonType } from "./components/BottomMenu";
+import TestComponent from "./components/test/TestComponent";
 
-const App = () => {
-    const [field, setField] = useState<Field>(generateField(50, 30));
-    const [mode, setMode] = useState<ModeButtonType>('pause');
-    const [speed, setSpeed] = useState<SpeedButtonType>('medium');
-    const [size, setSize] = useState<SizeButtonType>('50x30');
+interface AppProps {
+}
 
-    const sizeWH = size.split('x').map(item => parseInt(item));
-    const width = sizeWH[0];
-    const height = sizeWH[1];
+interface AppState {
+    field: Field;
+    mode: ModeButtonType;
+    speed: SpeedButtonType;
+    size: SizeButtonType;
+    width: number;
+    height: number;
+}
 
-    useEffect(() => {
-        setField(generateField(width, height));
-    }, [width, height]);
+class App extends React.Component<AppProps, AppState> {
+    _interval: NodeJS.Timer | undefined;
 
-    useEffect(() => {
+    setSpeed(speed: SpeedButtonType) {
+        this.setState({ speed })
+    }
+
+    setSize(size: SizeButtonType) {
+        this.setState({ size })
+    }
+
+    constructor(props: AppProps) {
+        super(props)
+        this.state = {
+            field: generateField(50, 30),
+            mode: 'pause',
+            speed: 'medium',
+            size: '50x30',
+            width: 50,
+            height: 30
+        }
+        this.setSpeed = this.setSpeed.bind(this);
+        this.setSize = this.setSize.bind(this);
+        this.onCellClick = this.onCellClick.bind(this);
+        this.onTopMenuClick = this.onTopMenuClick.bind(this);
+    }
+
+    onCellClick(x: number, y: number) {
+        const { mode, field } = this.state;
+        if (mode === 'pause') {
+            const fieldData = field.data.map((row, i) => row.map((cell, j) => ((i === x && j === y) ? (cell > 0 ? 0 : 1) : cell)));
+            this.setState({ field: { ...field, data: fieldData } })
+        }
+    }
+
+    onTopMenuClick(mode: ModeButtonType) {
+        if (mode === 'clear') {
+            const { width, height } = this.state;
+            this.setState({
+                mode: 'pause',
+                field: generateField(width, height)
+            })
+        } else {
+            this.setState({ mode });
+        }
+    }
+
+    shouldComponentUpdate(nextProps: AppProps, nextState: AppState) {
+        //не обновлять до момента соответсвия заданного размера игрового поля фактическому
+        if (nextState.width !== nextState.field.width || nextState.height !== nextState.field.height) {
+            return false;
+        }
+        return true;
+    }
+
+    componentDidUpdate() {
+        const { size, width, height, field, mode, speed } = this.state;
+        const sizeWH = size.split('x').map(item => parseInt(item));
+        const nextWidth = sizeWH[0];
+        const nextHeight = sizeWH[1];
+        if (nextWidth !== width || nextHeight !== height) {
+            console.log('update size')
+            this.setState({
+                field: generateField(nextWidth, nextHeight),
+                width: nextWidth,
+                height: nextHeight
+            })
+        }
+
+        clearTimeout(this._interval)
         if (mode === 'run') {
             let intervalValue = 400;
             if (speed === 'slow') intervalValue = 600;
             if (speed === 'fast') intervalValue = 150;
-            const interval = setInterval(() => {
+            this._interval = setInterval(() => {
                 const nextGen = generateNextGeneration(field);
-                setField(nextGen);
-                if (equalMatrix(field.data, nextGen.data)) {
-                    setMode('pause');
-                }
+                const nextMode = equalMatrix(field.data, nextGen.data) ? 'pause' : mode;
+                this.setState({ field: nextGen, mode: nextMode })
             }, intervalValue);
-            return () => { clearTimeout(interval) }
-        }
-    }, [mode, speed, field, width, height]);
-
-    const onCellClick = mode === 'pause' ? (x: number, y: number) => {
-        const fieldData = field.data.map((row, i) => row.map((cell, j) => ((i === x && j === y) ? (cell > 0 ? 0 : 1) : cell)));
-        setField({ ...field, data: fieldData })
-    } : undefined
-
-    const onTopMenuClick = (type: ModeButtonType) => {
-        if (type === 'clear') {
-            setMode('pause');
-            setField(generateField(width, height));
-        } else {
-            setMode(type);
         }
     }
 
-    return <div>
-        <TopMenu active={mode} onClick={onTopMenuClick} text={`Generation: ${field.generation}`} />
-        <div className="fieldbg">
-            <div className="field">
-                <GameField field={field.data} onCellClick={onCellClick} />
+    render() {
+        const { mode, field, size, speed } = this.state;
+        return <div>
+            <TestComponent />
+            <TopMenu active={mode} onClick={this.onTopMenuClick} text={`Generation: ${field.generation}`} />
+            <div className="fieldbg">
+                <div className="field">
+                    <GameField field={field.data} onCellClick={this.onCellClick} />
+                </div>
             </div>
+            <BottomMenu activeSize={size} activeSpeed={speed} onSizeClick={this.setSize} onSpeedClick={this.setSpeed} />
         </div>
-        <BottomMenu activeSize={size} activeSpeed={speed} onSizeClick={setSize} onSpeedClick={setSpeed} />
-    </div>
+    }
 }
 
 export default App;
