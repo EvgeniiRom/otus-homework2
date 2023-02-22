@@ -4,18 +4,23 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Cell from './Cell';
 
 export default {
-    title: 'Example/Cell',
+    title: 'UI Elements/Cell',
     component: Cell,
 } as ComponentMeta<typeof Cell>;
 
 const Template: ComponentStory<typeof Cell> = (args) => <Cell {...args} />;
 
-export const Primary = Template.bind({});
-Primary.args = {
-    size: 50
+export const Dead = Template.bind({});
+Dead.args = {
+    state: 'dead'
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
-    size: 100
+export const Young = Template.bind({});
+Young.args = {
+    state: 'young'
+};
+
+export const Old = Template.bind({});
+Old.args = {
+    state: 'old'
 };

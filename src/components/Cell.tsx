@@ -1,22 +1,24 @@
 import React from "react";
-import { useState } from "react";
 
-interface CellProps {
-    size: number
+export interface CellProps {
+    state?: 'dead' | 'young' | 'old'
+    onClick?: () => void
 }
 
 const Cell = (props: CellProps) => {
-    const [state, setState] = useState(0);
+    const { state, onClick } = props;
 
-    const onClick = () => {
-        setState((state + 1) % 3);
+    let backgroundColor = "#aaa";
+    switch (state) {
+        case 'young':
+            backgroundColor = "#f22";
+            break;
+        case 'old':
+            backgroundColor = "#a22";
+            break;
     }
 
-    const cellSize = props.size;
-
-    return <div style={{ width: cellSize, height: cellSize, backgroundColor: '#f00' }} onClick={onClick}>
-        {state}
-    </div>
+    return <div style={{ border: 'solid 1px #000', width: 10, height: 10, backgroundColor: backgroundColor }} onClick={onClick} />
 }
 
 export default Cell;
