@@ -1,3 +1,5 @@
+import { CellProps } from "../components/styled/Cell";
+
 export interface Field {
     data: number[][],
     width: number,
@@ -5,7 +7,7 @@ export interface Field {
     generation: number
 }
 
-export const generateFieldData = (width: number, height: number): number[][] => {
+export const generateFieldData = (width: number, height: number, randomPercent: number = 0): number[][] => {
     const result = [];
     for (let i = 0; i < height; i++) {
         const row = [];
@@ -14,7 +16,40 @@ export const generateFieldData = (width: number, height: number): number[][] => 
         }
         result.push(row);
     }
+    fillFieldRandom(result, width, height, randomPercent);
     return result;
+};
+
+const fillFieldRandom = (fieldData: number[][], width: number, height: number, percent: number) => {
+    const count = Math.floor(width * height * percent / 100);
+    for (let r = 0; r < count; r++) {
+        let deadOffset = 0;
+        const rand = Math.floor(Math.random() * (width * height - r)) + 1
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                if (fieldData[i][j] === 0) {
+                    deadOffset++;
+                }
+                if (rand === deadOffset) {
+                    fieldData[i][j] = 1;
+                    break;
+                }
+            }
+            if (rand === deadOffset) {
+                break;
+            }
+        }
+    }
+};
+
+export const fillFieldByField = (targetField: Field, sourceField: Field) => {
+    const width = Math.min(targetField.width, sourceField.width);
+    const height = Math.min(targetField.height, sourceField.height);
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            targetField.data[i][j] = sourceField.data[i][j];
+        }
+    }
 };
 
 export const getEnvironment = (field: Field): number[][] => {
@@ -57,8 +92,8 @@ export const generateNextGeneration = (field: Field): Field => {
     return { ...field, data: result, generation: generation + 1 };
 };
 
-export const generateField = (width: number, height: number): Field => {
-    return { data: generateFieldData(width, height), width: width, height: height, generation: 0 };
+export const generateField = (width: number, height: number, randomPercent: number = 0): Field => {
+    return { data: generateFieldData(width, height, randomPercent), width: width, height: height, generation: 0 };
 };
 
 export const equalMatrix = (m1: number[][], m2: number[][]): boolean => {
@@ -72,4 +107,12 @@ export const equalMatrix = (m1: number[][], m2: number[][]): boolean => {
         }
     }
     return true;
+}
+
+export const getCellStateByFieldCell = (cell: number): CellProps['state'] => {
+    switch (cell) {
+        case 1: return 'young';
+        case 2: return 'old';
+        default: return 'dead';
+    }
 }

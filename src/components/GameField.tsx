@@ -1,27 +1,22 @@
 import React from "react";
-import Cell, { CellProps } from "./Cell";
+import { getCellStateByFieldCell } from "../common/Tools";
+import Cell from "./styled/Cell";
+import GameFieldContainer from "./styled/GameFieldContainer";
+import GameFieldRow from "./styled/GameFieldRow";
 
 interface GameFieldProps {
     field: number[][]
     onCellClick?: (x: number, y: number) => void
 }
 
-const getCellStateByFieldCell = (cell: number): CellProps['state'] => {
-    switch (cell) {
-        case 1: return 'young';
-        case 2: return 'old';
-        default: return 'dead';
-    }
-}
-
 const GameField = (props: GameFieldProps) => {
     const { field, onCellClick = () => { } } = props;
 
-    return <div style={{ width: 'fit-content' }}>
-        {field.map((row, i) => <div key={i} style={{ display: 'flex', flexDirection: 'row' }}>
+    return <GameFieldContainer>
+        {field.map((row, i) => <GameFieldRow key={i}>
             {row.map((cell, j) => <Cell key={j} state={getCellStateByFieldCell(cell)} onClick={() => { onCellClick(i, j) }} />)}
-        </div>)}
-    </div>
+        </GameFieldRow>)}
+    </GameFieldContainer>
 }
 
 export default GameField;

@@ -4,7 +4,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Cell from './Cell';
 
 export default {
-    title: 'UI Elements/Cell',
+    title: 'UI Elements/styled/Cell',
     component: Cell,
 } as ComponentMeta<typeof Cell>;
 
