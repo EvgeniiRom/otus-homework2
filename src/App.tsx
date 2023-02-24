@@ -1,10 +1,11 @@
 import React from "react";
 import GameField from "./components/GameField";
-import { equalMatrix, Field, generateField, generateNextGeneration } from "./common/Tools";
-import "./styles/App.css";
+import { equalMatrix, Field, fillFieldByField, generateField, generateNextGeneration } from "./common/Tools";
 import TopMenu, { ModeButtonType } from "./components/TopMenu";
 import BottomMenu, { SizeButtonType, SpeedButtonType } from "./components/BottomMenu";
 import TestComponent from "./components/test/TestComponent";
+import GlobalStyle from "./components/styled/GlobalStyle";
+import TextDialog from "./components/TextDialog";
 
 interface AppProps {
 }
@@ -16,6 +17,8 @@ interface AppState {
     size: SizeButtonType;
     width: number;
     height: number;
+    dialogVisible: boolean;
+    playerName: string;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -37,12 +40,16 @@ class App extends React.Component<AppProps, AppState> {
             speed: 'medium',
             size: '50x30',
             width: 50,
-            height: 30
+            height: 30,
+            dialogVisible: true,
+            playerName: ''
         }
         this.setSpeed = this.setSpeed.bind(this);
         this.setSize = this.setSize.bind(this);
         this.onCellClick = this.onCellClick.bind(this);
         this.onTopMenuClick = this.onTopMenuClick.bind(this);
+        this.onRandomClick = this.onRandomClick.bind(this);
+        this.onDialogOk = this.onDialogOk.bind(this);
     }
 
     onCellClick(x: number, y: number) {
@@ -65,6 +72,24 @@ class App extends React.Component<AppProps, AppState> {
         }
     }
 
+    onRandomClick(value: number) {
+        if (this.state.mode === 'pause') {
+            const { width, height } = this.state;
+            this.setState({
+                field: generateField(width, height, value)
+            })
+        }
+    }
+
+    onDialogOk(value: string) {
+        if (value.trim().length > 0) {
+            this.setState({
+                dialogVisible: false,
+                playerName: value.trim()
+            })
+        }
+    }
+
     shouldComponentUpdate(nextProps: AppProps, nextState: AppState) {
         //не обновлять до момента соответсвия заданного размера игрового поля фактическому
         if (nextState.width !== nextState.field.width || nextState.height !== nextState.field.height) {
@@ -79,9 +104,10 @@ class App extends React.Component<AppProps, AppState> {
         const nextWidth = sizeWH[0];
         const nextHeight = sizeWH[1];
         if (nextWidth !== width || nextHeight !== height) {
-            console.log('update size')
+            const nextField = generateField(nextWidth, nextHeight);
+            fillFieldByField(nextField, field);
             this.setState({
-                field: generateField(nextWidth, nextHeight),
+                field: nextField,
                 width: nextWidth,
                 height: nextHeight
             })
@@ -101,17 +127,18 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     render() {
-        const { mode, field, size, speed } = this.state;
-        return <div>
-            <TestComponent />
-            <TopMenu active={mode} onClick={this.onTopMenuClick} text={`Generation: ${field.generation}`} />
-            <div className="fieldbg">
-                <div className="field">
-                    <GameField field={field.data} onCellClick={this.onCellClick} />
-                </div>
-            </div>
+        const { mode, field, size, speed, dialogVisible, playerName } = this.state;
+        return <>
+            <GlobalStyle />
+            {dialogVisible && <TextDialog message="Кто ты, воин?" onOk={this.onDialogOk} />}
+            <TopMenu active={mode}
+                onClick={this.onTopMenuClick}
+                onRandomClick={this.onRandomClick}
+                text={`Generation: ${field.generation}`}
+                playerName={playerName} />
+            <GameField field={field.data} onCellClick={this.onCellClick} />
             <BottomMenu activeSize={size} activeSpeed={speed} onSizeClick={this.setSize} onSpeedClick={this.setSpeed} />
-        </div>
+        </>
     }
 }
 
