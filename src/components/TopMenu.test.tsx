@@ -3,6 +3,12 @@ import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
 import TopMenu, { ModeButtonType } from './TopMenu';
 
+const mockedUserNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom') as any,
+    useNavigate: () => mockedUserNavigate,
+}));
+
 test('TopMenu - Mode click', () => {
     let lastMode: ModeButtonType | undefined;
 
@@ -43,9 +49,7 @@ test('TopMenu - Generate click', () => {
 });
 
 test('TopMenu - Render labels', () => {
-    render(<TopMenu text='some text' playerName='some name' />);
+    render(<TopMenu text='some text' />);
     const label1 = screen.getByText('some text');
-    const label2 = screen.getByText('some name');
     expect(label1).toBeInTheDocument();
-    expect(label2).toBeInTheDocument();
 });
