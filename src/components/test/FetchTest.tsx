@@ -20,12 +20,7 @@ class FetchTest extends React.Component<FetchTestProps, FetchTestState>{
 
     componentDidMount() {
         fetch(this.props.url)
-            .then((response) => {
-                if (response.status !== 200) {
-                    this.setState({ error: `RESPONSE STATUS: ${response.status}` });
-                }
-                return response.text()
-            })
+            .then((response) => response.ok ? response.text() : Promise.reject(response))
             .then((text) => { this.setState({ text }) })
             .catch(() => { this.setState({ error: "LOADING ERROR" }) })
     }
