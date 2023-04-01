@@ -7,7 +7,8 @@ const MenuContainer = styled.div`
     display: grid;
     grid-template-columns: auto auto auto auto;
     row-gap: 5px;
-    width: calc(580px - 20px);
+    min-width: calc(580px - 20px);
+    width: fit-content;
     padding: 10px;
 `
 

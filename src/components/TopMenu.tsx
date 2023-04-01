@@ -3,6 +3,10 @@ import Button from "./styled/Button"
 import TopMenuContainer from "./styled/TopMenuContainer";
 import Label from "./styled/Label";
 import TextField from "./styled/TextField";
+import { PLAYER_NAME_KEY } from "../AppConstants";
+import LogoutButton from "./styled/LogoutButton";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export type ModeButtonType = 'run' | 'pause' | 'clear' | 'random';
 
@@ -11,13 +15,19 @@ export interface TopMenuProps {
     onClick?: (type: ModeButtonType) => void
     onRandomClick?: (value: number) => void
     text?: string
-    playerName?: string
 }
 
+const ProfileContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+`
+
 const TopMenu = (props: TopMenuProps) => {
-    const { active, onClick = () => { }, onRandomClick = () => { }, text = '', playerName = 'PLAYER' } = props;
+    const { active, onClick = () => { }, onRandomClick = () => { }, text = '' } = props;
 
     const [random, setRandom] = useState<string>('50%');
+    const navigate = useNavigate();
 
     const onTextFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
         setRandom(event.target.value);
@@ -33,6 +43,13 @@ const TopMenu = (props: TopMenuProps) => {
         }
     }
 
+    const playerName = localStorage.getItem(PLAYER_NAME_KEY)
+
+    const logOut = () => {
+        localStorage.removeItem(PLAYER_NAME_KEY)
+        navigate("/");
+    }
+
     return <TopMenuContainer>
         <Button onClick={() => { onClick('run') }} active={active === 'run'} >Run</Button>
         <Button onClick={() => { onClick('pause') }} active={active === 'pause'} >Pause</Button>
@@ -41,7 +58,10 @@ const TopMenu = (props: TopMenuProps) => {
         <Label>Random generation: </Label>
         <TextField value={random} onChange={onTextFieldChange} error={!validRandom} />
         <Button onClick={onRandomButtonClick} >Generate</Button>
-        <Label>{playerName}</Label>
+        <ProfileContainer>
+            <Label>{playerName}</Label>
+            <LogoutButton onClick={logOut} id="logout_button" />
+        </ProfileContainer>
     </TopMenuContainer>
 }
 
