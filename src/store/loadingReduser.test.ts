@@ -1,12 +1,15 @@
-import { loadingReduser } from "./loadingReduser"
+import reducer, { errorLoad, loading, successLoad } from "./loadingReduser"
 
 test("loading reduser", () => {
-    let state = loadingReduser(undefined, { type: 'LOADING' });
+    let state = reducer(undefined, loading());
     expect(state).toEqual({ isLoading: true });
-    state = loadingReduser(state, { type: 'SUCCESS', value: 'some value' });
+
+    state = reducer(state, successLoad('some value'));
     expect(state).toEqual({ isLoading: false, data: 'some value', error: undefined });
-    state = loadingReduser(state, { type: 'LOADING' });
+
+    state = reducer(state, loading());
     expect(state).toEqual({ isLoading: true });
-    state = loadingReduser(state, { type: 'ERROR', value: 'some error' });
+
+    state = reducer(state, errorLoad('some error'));
     expect(state).toEqual({ isLoading: false, error: 'some error' });
 })
