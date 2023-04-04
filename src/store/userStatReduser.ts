@@ -1,5 +1,5 @@
 import { RootState } from './../store';
-import { takeEvery, call, put, take } from '@redux-saga/core/effects';
+import { takeEvery, call, put } from '@redux-saga/core/effects';
 import { createSelector } from "@reduxjs/toolkit";
 import { PLAYER_NAME_KEY } from "../AppConstants";
 import { CallEffect, ForkEffect, PutEffect } from 'redux-saga/effects';
@@ -59,6 +59,11 @@ export const statNameSelector = createSelector(
 export const loginSelector = createSelector(
     (state: RootState) => state.stat,
     (stat: UserStatState) => stat.isLogin
+)
+
+export const clickSelector = createSelector(
+    (state: RootState) => state.stat,
+    (stat: UserStatState) => stat.buttonClicks
 )
 
 export const getNameFromLocalStore = (): string | null => localStorage.getItem(PLAYER_NAME_KEY);

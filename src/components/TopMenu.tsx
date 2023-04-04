@@ -51,13 +51,13 @@ const TopMenu = (props: TopMenuProps) => {
     }
 
     return <TopMenuContainer>
-        <Button onClick={() => { onClick('run') }} active={active === 'run'} >Run</Button>
-        <Button onClick={() => { onClick('pause') }} active={active === 'pause'} >Pause</Button>
-        <Button onClick={() => { onClick('clear') }} active={active === 'clear'} >Clear</Button>
+        <Button onClick={() => { onClick('run') }} active={active === 'run'} logId="run">Run</Button>
+        <Button onClick={() => { onClick('pause') }} active={active === 'pause'} logId="pause">Pause</Button>
+        <Button onClick={() => { onClick('clear') }} active={active === 'clear'} logId="clear">Clear</Button>
         <Label>{text}</Label>
         <Label>Random generation: </Label>
         <TextField value={random} onChange={onTextFieldChange} error={!validRandom} />
-        <Button onClick={onRandomButtonClick} >Generate</Button>
+        <Button onClick={onRandomButtonClick} logId="generate">Generate</Button>
         <ProfileContainer>
             <Label>{playerName}</Label>
             <LogoutButton onClick={logOut} id="logout_button" />

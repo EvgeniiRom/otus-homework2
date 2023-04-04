@@ -6,7 +6,7 @@ import BottomMenu, { SizeButtonType, SpeedButtonType } from "../components/Botto
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { RootState } from "../store";
-import { withTheme } from "styled-components";
+import LogInfo from "../components/LogInfo";
 
 interface GameProps {
     isLogin: boolean
@@ -118,6 +118,7 @@ class Game extends React.Component<GameProps, GameState> {
         const { mode, field, size, speed } = this.state;
         return <>
             {!this.props.isLogin && <Navigate to="/" replace />}
+            <LogInfo/>
             <TopMenu active={mode}
                 onClick={this.onTopMenuClick}
                 onRandomClick={this.onRandomClick}

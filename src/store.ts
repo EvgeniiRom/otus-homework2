@@ -3,6 +3,7 @@ import userStatReduser, { loginSaga } from './store/userStatReduser';
 import loadingReduser from './store/loadingReduser';
 import createSagaMiddleware from 'redux-saga'
 import { all } from 'redux-saga/effects'
+import { enhancer } from 'addon-redux'
 
 const rootReducer = combineReducers({
     stat: userStatReduser,
@@ -20,6 +21,7 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
     const store = configureStore({
         reducer: combineReducers({ stat: userStatReduser, loading: loadingReduser }),
         middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
+        enhancers: [enhancer]
     })
     sagaMiddleware.run(rootSaga);
     return store;
@@ -28,4 +30,3 @@ export function setupStore(preloadedState?: PreloadedState<RootState>) {
 export type RootState = ReturnType<typeof rootReducer>
 export type AppStore = ReturnType<typeof setupStore>
 export type AppDispatch = AppStore['dispatch']
-
