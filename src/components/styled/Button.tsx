@@ -1,4 +1,6 @@
+import React from "react";
 import styled from "styled-components";
+import { OnClickNative, withClickLog } from "../logging/withClickLog";
 
 interface ButtonProps {
     active?: boolean
@@ -13,6 +15,6 @@ const Button = styled.button<ButtonProps>`
     width: 140px;
     height: 27px;
     font-size: 16px;
-    border-radius: 5px;    `
+    border-radius: 5px;`
 
-export default Button;
+export default withClickLog<React.ComponentProps<typeof Button> & OnClickNative>(Button);

@@ -1,11 +1,12 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, queryByAttribute, render, screen } from '@testing-library/react';
+import { fireEvent, queryByAttribute, screen } from '@testing-library/react';
 import App from './App';
 import { PLAYER_NAME_KEY } from './AppConstants';
+import { renderWithProviders } from './utils/testUtils';
 
 test('Login test', () => {
-    const dom = render(<App />);
+    const dom = renderWithProviders(<App />);
     const textbox = screen.getByRole('textbox');
     const button = screen.getByRole('button', { name: 'OK' });
     fireEvent.change(textbox, { target: { value: 'some name' } });

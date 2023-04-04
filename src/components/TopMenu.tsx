@@ -6,7 +6,8 @@ import TextField from "./styled/TextField";
 import { PLAYER_NAME_KEY } from "../AppConstants";
 import LogoutButton from "./styled/LogoutButton";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/userStatReduser";
 
 export type ModeButtonType = 'run' | 'pause' | 'clear' | 'random';
 
@@ -27,7 +28,7 @@ const TopMenu = (props: TopMenuProps) => {
     const { active, onClick = () => { }, onRandomClick = () => { }, text = '' } = props;
 
     const [random, setRandom] = useState<string>('50%');
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onTextFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
         setRandom(event.target.value);
@@ -46,18 +47,17 @@ const TopMenu = (props: TopMenuProps) => {
     const playerName = localStorage.getItem(PLAYER_NAME_KEY)
 
     const logOut = () => {
-        localStorage.removeItem(PLAYER_NAME_KEY)
-        navigate("/");
+        dispatch(logout());
     }
 
     return <TopMenuContainer>
-        <Button onClick={() => { onClick('run') }} active={active === 'run'} >Run</Button>
-        <Button onClick={() => { onClick('pause') }} active={active === 'pause'} >Pause</Button>
-        <Button onClick={() => { onClick('clear') }} active={active === 'clear'} >Clear</Button>
+        <Button onClick={() => { onClick('run') }} active={active === 'run'} logId="run">Run</Button>
+        <Button onClick={() => { onClick('pause') }} active={active === 'pause'} logId="pause">Pause</Button>
+        <Button onClick={() => { onClick('clear') }} active={active === 'clear'} logId="clear">Clear</Button>
         <Label>{text}</Label>
         <Label>Random generation: </Label>
         <TextField value={random} onChange={onTextFieldChange} error={!validRandom} />
-        <Button onClick={onRandomButtonClick} >Generate</Button>
+        <Button onClick={onRandomButtonClick} logId="generate">Generate</Button>
         <ProfileContainer>
             <Label>{playerName}</Label>
             <LogoutButton onClick={logOut} id="logout_button" />
