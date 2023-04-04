@@ -4,9 +4,12 @@ import { equalMatrix, Field, fillFieldByField, generateField, generateNextGenera
 import TopMenu, { ModeButtonType } from "../components/TopMenu";
 import BottomMenu, { SizeButtonType, SpeedButtonType } from "../components/BottomMenu";
 import { Navigate } from "react-router-dom";
-import { PLAYER_NAME_KEY } from "../AppConstants";
+import { connect } from "react-redux";
+import { RootState } from "../store";
+import { withTheme } from "styled-components";
 
 interface GameProps {
+    isLogin: boolean
 }
 
 interface GameState {
@@ -114,7 +117,7 @@ class Game extends React.Component<GameProps, GameState> {
     render() {
         const { mode, field, size, speed } = this.state;
         return <>
-            {!localStorage.getItem(PLAYER_NAME_KEY) && <Navigate to="/" replace />}
+            {!this.props.isLogin && <Navigate to="/" replace />}
             <TopMenu active={mode}
                 onClick={this.onTopMenuClick}
                 onRandomClick={this.onRandomClick}
@@ -125,4 +128,9 @@ class Game extends React.Component<GameProps, GameState> {
     }
 }
 
-export default Game;
+function mapStateToProps(state: RootState) {
+    const { stat } = state
+    return { isLogin: stat.isLogin }
+}
+
+export default connect(mapStateToProps)(Game);

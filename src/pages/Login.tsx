@@ -1,21 +1,21 @@
 import React from 'react'
-import { Navigate, useNavigate } from 'react-router-dom';
-import { PLAYER_NAME_KEY } from '../AppConstants';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import TextDialog from '../components/TextDialog';
+import { login, loginSelector } from '../store/userStatReduser';
 
 const Login = () => {
-    const navigate = useNavigate();
+    const isLogin = useSelector(loginSelector);
+    const dispatch = useDispatch();
 
     const onOk = (value: string) => {
         if (value.trim().length > 0) {
-            localStorage.setItem(PLAYER_NAME_KEY, value);
-            navigate("/game");
+            dispatch(login(value));
         }
     }
 
-    const playerName = localStorage.getItem(PLAYER_NAME_KEY);
     return <>
-        {playerName && <Navigate to='/game' replace />}
+        {isLogin && <Navigate to='/game' replace />}
         <TextDialog message="Кто ты, воин?" onOk={onOk} />
     </>
 }
