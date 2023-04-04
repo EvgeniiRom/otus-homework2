@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, PreloadedState } from '@reduxjs/toolkit'
+import { combineReducers, configureStore, PreloadedState, Store } from '@reduxjs/toolkit'
 import userStatReduser, { loginSaga } from './store/userStatReduser';
 import loadingReduser from './store/loadingReduser';
 import createSagaMiddleware from 'redux-saga'
@@ -16,9 +16,10 @@ function* rootSaga() {
     ])
 }
 
-export function setupStore(preloadedState?: PreloadedState<RootState>) {
+export function setupStore(preloadedState?: PreloadedState<RootState>): Store<RootState> {
     const sagaMiddleware = createSagaMiddleware();
     const store = configureStore({
+        preloadedState,
         reducer: combineReducers({ stat: userStatReduser, loading: loadingReduser }),
         middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
         enhancers: [enhancer]
