@@ -66,9 +66,9 @@ export const clickSelector = createSelector(
     (stat: UserStatState) => stat.buttonClicks
 )
 
-export const getNameFromLocalStore = (): string | null => localStorage.getItem(PLAYER_NAME_KEY);
-export const setNameToLocalStore = (name: string) => localStorage.setItem(PLAYER_NAME_KEY, name);
-export const cleanLocalStore = () => localStorage.removeItem(PLAYER_NAME_KEY);
+export const getNameFromLocalStore = (): string | null | false => (typeof window !== 'undefined') && localStorage.getItem(PLAYER_NAME_KEY);
+export const setNameToLocalStore = (name: string) => (typeof window !== 'undefined') && localStorage.setItem(PLAYER_NAME_KEY, name);
+export const cleanLocalStore = () => (typeof window !== 'undefined') && localStorage.removeItem(PLAYER_NAME_KEY);
 
 function* onLogin(action: LoginAction): Generator<CallEffect, void, void> {
     yield call(setNameToLocalStore, action.name)

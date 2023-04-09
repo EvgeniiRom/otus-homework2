@@ -3,7 +3,6 @@ import GameField from "../components/GameField";
 import { equalMatrix, Field, fillFieldByField, generateField, generateNextGeneration } from "../common/Tools";
 import TopMenu, { ModeButtonType } from "../components/TopMenu";
 import BottomMenu, { SizeButtonType, SpeedButtonType } from "../components/BottomMenu";
-import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { RootState } from "../store";
 import LogInfo from "../components/LogInfo";
@@ -117,7 +116,6 @@ class Game extends React.Component<GameProps, GameState> {
     render() {
         const { mode, field, size, speed } = this.state;
         return <>
-            {!this.props.isLogin && <Navigate to="/" replace />}
             <LogInfo/>
             <TopMenu active={mode}
                 onClick={this.onTopMenuClick}

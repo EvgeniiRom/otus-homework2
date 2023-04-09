@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 import TextDialog from '../components/TextDialog';
 import { login, loginSelector } from '../store/userStatReduser';
 
@@ -15,7 +14,6 @@ const Login = () => {
     }
 
     return <>
-        {isLogin && <Navigate to='/game' replace />}
         <TextDialog message="Кто ты, воин?" onOk={onOk} />
     </>
 }

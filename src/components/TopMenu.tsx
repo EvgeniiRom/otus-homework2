@@ -3,11 +3,10 @@ import Button from "./styled/Button"
 import TopMenuContainer from "./styled/TopMenuContainer";
 import Label from "./styled/Label";
 import TextField from "./styled/TextField";
-import { PLAYER_NAME_KEY } from "../AppConstants";
 import LogoutButton from "./styled/LogoutButton";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { logout } from "../store/userStatReduser";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, statNameSelector } from "../store/userStatReduser";
 
 export type ModeButtonType = 'run' | 'pause' | 'clear' | 'random';
 
@@ -29,6 +28,7 @@ const TopMenu = (props: TopMenuProps) => {
 
     const [random, setRandom] = useState<string>('50%');
     const dispatch = useDispatch();
+    const playerName = useSelector(statNameSelector);
 
     const onTextFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
         setRandom(event.target.value);
@@ -43,8 +43,6 @@ const TopMenu = (props: TopMenuProps) => {
             onRandomClick(randomValue);
         }
     }
-
-    const playerName = localStorage.getItem(PLAYER_NAME_KEY)
 
     const logOut = () => {
         dispatch(logout());
