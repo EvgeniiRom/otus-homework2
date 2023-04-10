@@ -16,7 +16,7 @@ function* rootSaga() {
     ])
 }
 
-export function setupStore(preloadedState?: PreloadedState<RootState>): Store<RootState> {
+export function setupStore(activeSaga: boolean = true, preloadedState?: PreloadedState<RootState>): Store<RootState> {
     const sagaMiddleware = createSagaMiddleware();
     const store = configureStore({
         preloadedState,
@@ -24,7 +24,7 @@ export function setupStore(preloadedState?: PreloadedState<RootState>): Store<Ro
         middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
         enhancers: [enhancer]
     })
-    sagaMiddleware.run(rootSaga);
+    activeSaga && sagaMiddleware.run(rootSaga);
     return store;
 }
 

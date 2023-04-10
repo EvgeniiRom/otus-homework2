@@ -9,7 +9,7 @@ const Test = () => {
 
     return <div>
         {name}
-        {localStorage.getItem(PLAYER_NAME_KEY)}
+        {(typeof window !== 'undefined') && localStorage.getItem(PLAYER_NAME_KEY)}
         <button onClick={() => { dispatch(login("Zhenya")) }}>login</button>
         <button onClick={() => { dispatch(logout()) }}>logout</button>
     </div>
