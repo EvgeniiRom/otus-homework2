@@ -1,5 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/react';
 import TextDialog from './TextDialog';
 import { renderWithProviders } from '../utils/testUtils';
@@ -34,6 +35,6 @@ test('ok click test TextDialog', () => {
     fireEvent.change(textbox, { target: { value: 'hi' } });
     expect(textbox).toHaveValue('hi');
     expect(message).toBe('hello');
-    fireEvent.click(button);
+    userEvent.type(textbox, "{enter}")
     expect(message).toBe('hi');
 });
