@@ -1,14 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import TopMenu, { ModeButtonType } from './TopMenu';
 import { renderWithProviders } from '../utils/testUtils';
-
-const mockedUserNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom') as any,
-    useNavigate: () => mockedUserNavigate,
-}));
 
 test('TopMenu - Mode click', () => {
     let lastMode: ModeButtonType | undefined;
