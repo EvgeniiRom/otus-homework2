@@ -1,7 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import BottomMenu, { SizeButtonType, SpeedButtonType } from './BottomMenu';
+import { renderWithProviders } from '../utils/testUtils';
 
 test('BottomMenu - Size click', () => {
     let lastSize: SizeButtonType | undefined;
@@ -10,7 +11,7 @@ test('BottomMenu - Size click', () => {
         lastSize = size;
     }
 
-    render(<BottomMenu onSizeClick={onSizeClick} />);
+    renderWithProviders(<BottomMenu onSizeClick={onSizeClick} />);
     const sizeButton1 = screen.getByRole('button', { name: 'Size: 50x30' });
     const sizeButton2 = screen.getByRole('button', { name: 'Size: 70x50' });
     const sizeButton3 = screen.getByRole('button', { name: 'Size: 100x80' });
@@ -29,7 +30,7 @@ test('BottomMenu - Speed click', () => {
         lastSpeed = speed;
     }
 
-    render(<BottomMenu onSpeedClick={onSpeedClick} />);
+    renderWithProviders(<BottomMenu onSpeedClick={onSpeedClick} />);
     const slowButton = screen.getByRole('button', { name: 'Slow' });
     const mediumButton = screen.getByRole('button', { name: 'Medium' });
     const fastButton = screen.getByRole('button', { name: 'Fast' });

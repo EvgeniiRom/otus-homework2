@@ -1,13 +1,8 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import TopMenu, { ModeButtonType } from './TopMenu';
-
-const mockedUserNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom') as any,
-    useNavigate: () => mockedUserNavigate,
-}));
+import { renderWithProviders } from '../utils/testUtils';
 
 test('TopMenu - Mode click', () => {
     let lastMode: ModeButtonType | undefined;
@@ -16,7 +11,7 @@ test('TopMenu - Mode click', () => {
         lastMode = mode;
     }
 
-    render(<TopMenu onClick={onModeClick} />);
+    renderWithProviders(<TopMenu onClick={onModeClick} />);
     const runButton = screen.getByRole('button', { name: 'Run' });
     const pauseButton = screen.getByRole('button', { name: 'Pause' });
     const clearButton = screen.getByRole('button', { name: 'Clear' });
@@ -35,7 +30,7 @@ test('TopMenu - Generate click', () => {
         lastRand = value;
     }
 
-    render(<TopMenu onRandomClick={onRandClick} />);
+    renderWithProviders(<TopMenu onRandomClick={onRandClick} />);
     const textbox = screen.getByRole('textbox');
     const genButton = screen.getByRole('button', { name: 'Generate' });
     fireEvent.click(genButton)
@@ -49,7 +44,7 @@ test('TopMenu - Generate click', () => {
 });
 
 test('TopMenu - Render labels', () => {
-    render(<TopMenu text='some text' />);
+    renderWithProviders(<TopMenu text='some text' />);
     const label1 = screen.getByText('some text');
     expect(label1).toBeInTheDocument();
 });

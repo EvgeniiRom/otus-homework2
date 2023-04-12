@@ -3,10 +3,14 @@ import GameField from "../components/GameField";
 import { equalMatrix, Field, fillFieldByField, generateField, generateNextGeneration } from "../common/Tools";
 import TopMenu, { ModeButtonType } from "../components/TopMenu";
 import BottomMenu, { SizeButtonType, SpeedButtonType } from "../components/BottomMenu";
-import { Navigate } from "react-router-dom";
-import { PLAYER_NAME_KEY } from "../AppConstants";
+import { connect } from "react-redux";
+import { RootState } from "../store";
+import LogInfo from "../components/LogInfo";
+import { withRouter } from "next/router";
+import { WithRouterProps } from "next/dist/client/with-router";
 
-interface GameProps {
+interface GameProps extends WithRouterProps {
+    isLogin: boolean
 }
 
 interface GameState {
@@ -44,6 +48,7 @@ class Game extends React.Component<GameProps, GameState> {
         this.onCellClick = this.onCellClick.bind(this);
         this.onTopMenuClick = this.onTopMenuClick.bind(this);
         this.onRandomClick = this.onRandomClick.bind(this);
+        this.checkLogin = this.checkLogin.bind(this);
     }
 
     onCellClick(x: number, y: number) {
@@ -75,6 +80,11 @@ class Game extends React.Component<GameProps, GameState> {
         }
     }
 
+    checkLogin() {
+        const { isLogin, router } = this.props;
+        { !isLogin && router.push('/') }
+    }
+
     shouldComponentUpdate(nextProps: GameProps, nextState: GameState) {
         //не обновлять до момента соответсвия заданного размера игрового поля фактическому
         if (nextState.width !== nextState.field.width || nextState.height !== nextState.field.height) {
@@ -83,7 +93,12 @@ class Game extends React.Component<GameProps, GameState> {
         return true;
     }
 
+    componentDidMount() {
+        this.checkLogin();
+    }
+
     componentDidUpdate() {
+        this.checkLogin();
         const { size, width, height, field, mode, speed } = this.state;
         const sizeWH = size.split('x').map(item => parseInt(item));
         const nextWidth = sizeWH[0];
@@ -114,7 +129,7 @@ class Game extends React.Component<GameProps, GameState> {
     render() {
         const { mode, field, size, speed } = this.state;
         return <>
-            {!localStorage.getItem(PLAYER_NAME_KEY) && <Navigate to="/" replace />}
+            <LogInfo />
             <TopMenu active={mode}
                 onClick={this.onTopMenuClick}
                 onRandomClick={this.onRandomClick}
@@ -125,4 +140,10 @@ class Game extends React.Component<GameProps, GameState> {
     }
 }
 
-export default Game;
+function mapStateToProps(state: RootState) {
+    const { stat } = state
+    return { isLogin: stat.isLogin }
+}
+
+
+export default withRouter(connect(mapStateToProps)(Game));
