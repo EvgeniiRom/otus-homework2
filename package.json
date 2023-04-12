@@ -35,6 +35,7 @@
     "@storybook/nextjs": "^7.0.2",
     "@storybook/react": "^7.0.2",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@stryker-mutator/core": "^6.4.2",
     "@stryker-mutator/typescript-checker": "^6.4.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
