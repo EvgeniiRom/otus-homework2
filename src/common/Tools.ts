@@ -111,8 +111,9 @@ export const equalMatrix = (m1: number[][], m2: number[][]): boolean => {
 
 export const getCellStateByFieldCell = (cell: number): CellProps['state'] => {
     switch (cell) {
+        case 0: return 'dead';
         case 1: return 'young';
         case 2: return 'old';
-        default: return 'dead';
+        default: throw new Error(`Нет состояния ячейки с кодом ${cell}`);
     }
 }
